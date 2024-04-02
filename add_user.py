@@ -9,15 +9,27 @@ def username_taken(name):
     cursor = conn.execute('SELECT username FROM users WHERE username = ?', (name,))
 
     data = cursor.fetchone()
+
+    conn.close()
     if data is None:
         return False
     else:
         return True
 
-#print(username_taken('John'))
+
+def add_user(username, password):
+    conn = sqlite3.connect("ppadb6.db")
+    c = conn.cursor()
+
+    c.execute("INSERT INTO users VALUES (?, ?)", (username, password))
+
+    conn.commit()
+
+    conn.close()
+
 
 if __name__ == "__main__":
-    print("Login")
+    print("Create a new account:")
 
     while True:
         username = input("What is your username? ")
@@ -34,12 +46,8 @@ if __name__ == "__main__":
     conn = sqlite3.connect("ppadb6.db")
     c = conn.cursor()
 
-    c.execute("INSERT INTO users VALUES (?, ?)", (username, password))
+    add_user(username, password)
+    print("Added %s to the database!" % username)
 
-    conn.commit()
-
-    result = c.execute("SELECT * FROM users")
-    for row in result:
-        print(row)
 
 
